@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .dashboard-container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .welcome-badge {
+      display: inline-block;
+      background: #f5576c;
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 32px;
+    }
+    
+    .user-info {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+    
+    .user-info p {
+      margin: 10px 0;
+      color: #666;
+      font-size: 16px;
+    }
+    
+    .user-info strong {
+      color: #333;
+    }
+    
+    .logout-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 20px;
+      transition: background 0.3s;
+    }
+    
+    .logout-btn:hover {
+      background: #c82333;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .feature-card {
+      background: #f5576c;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="welcome-badge">CLIENT</div>
+    <h1>Hello <span id="clientName"></span>! 📖</h1>
+    <p style="color: #666; margin-top: 10px;">Welcome to the library</p>
+    
+    <div class="user-info">
+      <p><strong>Full Name:</strong> <span id="fullName"></span></p>
+      <p><strong>Email:</strong> <span id="email"></span></p>
+      <p><strong>Role:</strong> <span id="role"></span></p>
+      <p><strong>User ID:</strong> <span id="userId"></span></p>
+    </div>
+    
+    <div class="features">
+      <div class="feature-card">
+        <h3>📚</h3>
+        <p>Browse Books</p>
+      </div>
+      <div class="feature-card">
+        <h3>📖</h3>
+        <p>My Loans</p>
+      </div>
+      <div class="feature-card">
+        <h3>⭐</h3>
+        <p>My Ratings</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔖</h3>
+        <p>Reservations</p>
+      </div>
+    </div>
+    
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    // Get user data from localStorage
+    const user = JSON.parse(localStorage.getItem('user'));
+    
+    // If no user data, redirect to login
+    if (!user) {
+      window.location.href = 'login.html';
+    } else {
+      // Display user information
+      document.getElementById('clientName').textContent = user.fullName.split(' ')[0];
+      document.getElementById('fullName').textContent = user.fullName;
+      document.getElementById('email').textContent = user.email;
+      document.getElementById('role').textContent = user.role.toUpperCase();
+      document.getElementById('userId').textContent = user.userId;
+    }
+    
+    // Logout function
+    function logout() {
+      localStorage.removeItem('user');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>
