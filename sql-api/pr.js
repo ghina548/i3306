@@ -46,21 +46,12 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
       errorMessage.textContent = "Login successful! Redirecting...";
       
       // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('currentUser', JSON.stringify(data.user));
       
       // Redirect based on role after 1 second
       setTimeout(() => {
-        if (data.user.role === 'manager') {
-          window.location.href = 'manager.html';
-        } else if (data.user.role === 'librarian') {
-          window.location.href = 'librarian.html';
-        } else if (data.user.role === 'client') {
-          window.location.href = 'client.html';
-        } else {
-          // Default redirect if role is unknown
-          window.location.href = 'dashboard.html';
-        }
-      }, 1000);
+    window.location.href = 'HomePage.html';  // Go to homepage instead
+}, 1000);
       
     } else {
       // Login failed

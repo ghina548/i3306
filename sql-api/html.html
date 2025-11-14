@@ -3,24 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Page</title>
+  <title>Login - Bibliotheca</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="pr.css">
 </head>
 <body>
   <div class="login-container">
-    <h2>Login</h2>
+    <div class="login-logo">📚 BIBLIOTHECA</div>
+    <h2>Welcome Back</h2>
     <form id="loginForm">
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">Email Address</label>
         <input type="email" id="email" placeholder="Enter your email" required>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" placeholder="Enter your password" required>
       </div>
-      <button type="submit">Login</button>
+      <button type="submit">Sign In</button>
       <p id="error-message"></p>
     </form>
+    <a href="HomePage.html" class="back-link">← Back to Home</a>
   </div>
   <script src="pr.js"></script>
 </body>

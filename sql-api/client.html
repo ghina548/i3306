@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Dashboard - Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .dashboard-header {
+      max-width: 1400px;
+      margin: 0 auto 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem 2rem;
+      border-radius: 20px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+    }
+
+    .user-info h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .user-info p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 0.5rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      color: white;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(124, 58, 237, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 2px solid rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(124, 58, 237, 0.2);
+    }
+
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      border-radius: 20px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(124, 58, 237, 0.3);
+    }
+
+    .stat-card .icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat-card .value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card .label {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
+    }
+
+    /* Sections */
+    .section {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      border-radius: 20px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      margin-bottom: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Loans Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+    }
+
+    th {
+      background: rgba(124, 58, 237, 0.2);
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    tr:hover {
+      background: rgba(124, 58, 237, 0.1);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 50px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .status-ongoing {
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .status-overdue {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .status-returned {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    /* Reservations */
+    .reservations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    .reservation-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1.5rem;
+      border-radius: 15px;
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .reservation-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .reservation-card h3 {
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .reservation-card p {
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0.25rem 0;
+      font-size: 0.9rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .empty-state .icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-header">
+    <div class="user-info">
+      <h2 id="userName">Welcome!</h2>
+      <p id="userEmail"></p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-secondary" onclick="window.location.href='HomePage.html'">🏠 Home</button>
+      <button class="btn btn-secondary" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <div class="dashboard-container">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="icon">📚</div>
+        <div class="value" id="totalLoans">0</div>
+        <div class="label">Total Loans</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">📖</div>
+        <div class="value" id="activeLoans">0</div>
+        <div class="label">Active Loans</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">⚠️</div>
+        <div class="value" id="overdueLoans">0</div>
+        <div class="label">Overdue</div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">💰</div>
+        <div class="value" id="totalFines">$0</div>
+        <div class="label">Total Fines</div>
+      </div>
+    </div>
+
+    <!-- Current & Past Loans -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">📚 My Loans</h2>
+      </div>
+      <div id="loansContainer">
+        <div class="loading">Loading your loans...</div>
+      </div>
+    </div>
+
+    <!-- Reservations -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">🔖 My Reservations</h2>
+      </div>
+      <div id="reservationsContainer">
+        <div class="loading">Loading your reservations...</div>
+      </div>
+    </div>
+
+    <!-- Reading History & Stats -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">📊 My Reading Stats</h2>
+      </div>
+      <div id="statsContainer">
+        <div class="loading">Loading your stats...</div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Check if user is logged in
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || user.role !== 'client') {
+      window.location.href = 'html.html';
+    }
+    
+    // Display user info
+    document.getElementById('userName').textContent = `Welcome, ${user.fullName}!`;
+    document.getElementById('userEmail').textContent = user.email;
+    
+    // Fetch and display all data
+    async function loadAllData() {
+      await Promise.all([
+        loadLoans(),
+        loadReservations(),
+        loadStats()
+      ]);
+    }
+
+    // Load loans
+    async function loadLoans() {
+      try {
+        const response = await fetch(`http://localhost:3000/client/loans/${user.userId}`);
+        const data = await response.json();
+        
+        if (data.success && data.loans.length > 0) {
+          // Update stats
+          const total = data.loans.length;
+          const active = data.loans.filter(l => l.STATUS === 'ongoing').length;
+          const overdue = data.loans.filter(l => l.STATUS === 'overdue').length;
+          const totalFines = data.loans.reduce((sum, l) => sum + (l.FINE_AMOUNT || 0), 0);
+
+          document.getElementById('totalLoans').textContent = total;
+          document.getElementById('activeLoans').textContent = active;
+          document.getElementById('overdueLoans').textContent = overdue;
+          document.getElementById('totalFines').textContent = `$${totalFines.toFixed(2)}`;
+
+          // Display loans table
+          const loansHtml = `
+            <table>
+              <thead>
+                <tr>
+                  <th>Book Title</th>
+                  <th>Loan Date</th>
+                  <th>Due Date</th>
+                  <th>Return Date</th>
+                  <th>Status</th>
+                  <th>Fine</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${data.loans.map(loan => `
+                  <tr>
+                    <td><strong>${loan.TITLE}</strong></td>
+                    <td>${new Date(loan.LOAN_DATE).toLocaleDateString()}</td>
+                    <td>${new Date(loan.DUE_DATE).toLocaleDateString()}</td>
+                    <td>${loan.RETURN_DATE ? new Date(loan.RETURN_DATE).toLocaleDateString() : '-'}</td>
+                    <td><span class="status-badge status-${loan.STATUS}">${loan.STATUS.toUpperCase()}</span></td>
+                    <td>${loan.FINE_AMOUNT ? `$${loan.FINE_AMOUNT}` : '$0'}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+          document.getElementById('loansContainer').innerHTML = loansHtml;
+        } else {
+          document.getElementById('loansContainer').innerHTML = `
+            <div class="empty-state">
+              <div class="icon">📚</div>
+              <p>You haven't borrowed any books yet.</p>
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading loans:', error);
+        document.getElementById('loansContainer').innerHTML = `
+          <div class="empty-state">
+            <p>Error loading loans. Please try again.</p>
+          </div>
+        `;
+      }
+    }
+
+    // Load reservations
+    async function loadReservations() {
+      try {
+        const response = await fetch(`http://localhost:3000/client/reservations/${user.userId}`);
+        const data = await response.json();
+        
+        if (data.success && data.reservations.length > 0) {
+          const reservationsHtml = `
+            <div class="reservations-grid">
+              ${data.reservations.map(res => `
+                <div class="reservation-card">
+                  <h3>${res.TITLE}</h3>
+                  <p>📅 Reserved: ${new Date(res.RESERVATION_DATE).toLocaleDateString()}</p>
+                  <p>Status: <span class="status-badge status-${res.STATUS}">${res.STATUS.toUpperCase()}</span></p>
+                </div>
+              `).join('')}
+            </div>
+          `;
+          document.getElementById('reservationsContainer').innerHTML = reservationsHtml;
+        } else {
+          document.getElementById('reservationsContainer').innerHTML = `
+            <div class="empty-state">
+              <div class="icon">🔖</div>
+              <p>No active reservations.</p>
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading reservations:', error);
+        document.getElementById('reservationsContainer').innerHTML = `
+          <div class="empty-state">
+            <p>Error loading reservations.</p>
+          </div>
+        `;
+      }
+    }
+
+    // Load reading stats
+    async function loadStats() {
+      try {
+        const response = await fetch(`http://localhost:3000/client/stats/${user.userId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+          const statsHtml = `
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="icon">📖</div>
+                <div class="value">${data.stats.totalBooksRead || 0}</div>
+                <div class="label">Books Read</div>
+              </div>
+              <div class="stat-card">
+                <div class="icon">⭐</div>
+                <div class="value">${data.stats.averageRating || 0}</div>
+                <div class="label">Avg Rating Given</div>
+              </div>
+              <div class="stat-card">
+                <div class="icon">🎭</div>
+                <div class="value">${data.stats.favoriteGenre || 'N/A'}</div>
+                <div class="label">Favorite Genre</div>
+              </div>
+            </div>
+          `;
+          document.getElementById('statsContainer').innerHTML = statsHtml;
+        }
+      } catch (error) {
+        console.error('Error loading stats:', error);
+        document.getElementById('statsContainer').innerHTML = `
+          <div class="empty-state">
+            <p>No reading stats yet.</p>
+          </div>
+        `;
+      }
+    }
+    
+    function logout() {
+      localStorage.removeItem('user');
+      window.location.href = 'html.html';
+    }
+    
+    // Load all data on page load
+    loadAllData();
+  </script>
+</body>
+</html>

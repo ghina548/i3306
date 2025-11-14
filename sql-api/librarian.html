@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Librarian Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .dashboard-header {
+      max-width: 1600px;
+      margin: 0 auto 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem 2rem;
+      border-radius: 20px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+    }
+
+    .user-info h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .user-info p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 0.5rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      color: white;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(124, 58, 237, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 2px solid rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(124, 58, 237, 0.2);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .dashboard-container {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* Quick Actions Bar */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .action-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem;
+      border-radius: 15px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .action-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(124, 58, 237, 0.3);
+      background: rgba(124, 58, 237, 0.2);
+    }
+
+    .action-card .icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .action-card .label {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    /* Search Bar */
+    .search-section {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      border-radius: 20px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      margin-bottom: 2rem;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 0.875rem 1.5rem;
+      border: 2px solid rgba(124, 58, 237, 0.3);
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #7c3aed;
+      box-shadow: 0 0 30px rgba(124, 58, 237, 0.4);
+    }
+
+    .search-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .search-tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-tab {
+      padding: 0.5rem 1.5rem;
+      border: none;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .search-tab.active {
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      color: white;
+    }
+
+    /* Section */
+    .section {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      border-radius: 20px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      margin-bottom: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Stats Cards */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1.5rem;
+      border-radius: 15px;
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      text-align: center;
+    }
+
+    .stat-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card .label {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+    }
+
+    th {
+      background: rgba(124, 58, 237, 0.2);
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    tr:hover {
+      background: rgba(124, 58, 237, 0.1);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 50px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .status-ongoing {
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .status-overdue {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .status-returned {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .status-pending {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .status-fulfilled {
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: rgba(30, 27, 75, 0.98);
+      backdrop-filter: blur(20px);
+      padding: 2rem;
+      border-radius: 20px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      max-width: 700px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(239, 68, 68, 0.2);
+      transform: rotate(90deg);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid rgba(124, 58, 237, 0.3);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #7c3aed;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .user-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1.5rem;
+      border-radius: 15px;
+      margin-bottom: 1rem;
+    }
+
+    .user-card h3 {
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .user-card p {
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0.25rem 0;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .success-message {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #4ade80;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .error-message {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-header">
+    <div class="user-info">
+      <h1>📖 Librarian Desk</h1>
+      <p id="librarianName">Loading...</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-secondary" onclick="window.location.href='HomePage.html'">🏠 Home</button>
+      <button class="btn btn-secondary" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <div class="dashboard-container">
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <div class="action-card" onclick="openLoanModal()">
+        <div class="icon">➕</div>
+        <div class="label">Process Loan</div>
+      </div>
+      <div class="action-card" onclick="openReturnModal()">
+        <div class="icon">✅</div>
+        <div class="label">Process Return</div>
+      </div>
+      <div class="action-card" onclick="showReservations()">
+        <div class="icon">🔖</div>
+        <div class="label">Reservations</div>
+      </div>
+      <div class="action-card" onclick="showOverdue()">
+        <div class="icon">⚠️</div>
+        <div class="label">Overdue Books</div>
+      </div>
+    </div>
+
+    <!-- Today's Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="value" id="todayLoans">0</div>
+        <div class="label">Today's Loans</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="todayReturns">0</div>
+        <div class="label">Today's Returns</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="activeLoans">0</div>
+        <div class="label">Active Loans</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="overdueCount">0</div>
+        <div class="label">Overdue</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="pendingReservations">0</div>
+        <div class="label">Pending Reservations</div>
+      </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-section">
+      <h2 class="section-title" style="margin-bottom: 1rem;">🔍 Quick Search</h2>
+      <div class="search-tabs">
+        <button class="search-tab active" onclick="setSearchType('user')">Search User</button>
+        <button class="search-tab" onclick="setSearchType('book')">Search Book</button>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search by email or name...">
+        <button class="btn btn-primary" onclick="performSearch()">🔍 Search</button>
+      </div>
+      <div id="searchResults"></div>
+    </div>
+
+    <!-- Active Loans Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">📚 Active & Overdue Loans</h2>
+        <button class="btn btn-secondary btn-small" onclick="loadActiveLoans()">🔄 Refresh</button>
+      </div>
+      <div id="activeLoansTable">
+        <div class="loading">Loading active loans...</div>
+      </div>
+    </div>
+
+    <!-- Reservations Section -->
+    <div class="section" id="reservationsSection" style="display: none;">
+      <div class="section-header">
+        <h2 class="section-title">🔖 Pending Reservations</h2>
+        <button class="btn btn-secondary btn-small" onclick="hideReservations()">✕ Close</button>
+      </div>
+      <div id="reservationsTable">
+        <div class="loading">Loading reservations...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Process Loan Modal -->
+  <div id="loanModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="section-title">➕ Process New Loan</h2>
+        <button class="modal-close" onclick="closeLoanModal()">×</button>
+      </div>
+      <div id="loanMessage"></div>
+      <form id="loanForm">
+        <div class="form-group">
+          <label>User Email *</label>
+          <input type="email" id="loanUserEmail" required placeholder="user@example.com">
+        </div>
+        <div class="form-group">
+          <label>Book ID *</label>
+          <input type="number" id="loanBookId" required placeholder="Enter book ID">
+        </div>
+        <div class="form-group">
+          <label>Loan Duration (months) *</label>
+          <select id="loanDuration" required>
+            <option value="1">1 Month</option>
+            <option value="2" selected>2 Months</option>
+            <option value="3">3 Months</option>
+            <option value="6">6 Months</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <button type="submit" class="btn btn-success" style="flex: 1;">✅ Process Loan</button>
+          <button type="button" class="btn btn-secondary" onclick="closeLoanModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Process Return Modal -->
+  <div id="returnModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="section-title">✅ Process Return</h2>
+        <button class="modal-close" onclick="closeReturnModal()">×</button>
+      </div>
+      <div id="returnMessage"></div>
+      <form id="returnForm">
+        <div class="form-group">
+          <label>Loan ID *</label>
+          <input type="number" id="returnLoanId" required placeholder="Enter loan ID">
+        </div>
+        <div class="form-group">
+          <label>Fine Amount (if any)</label>
+          <input type="number" step="0.01" id="returnFine" placeholder="0.00" value="0">
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <button type="submit" class="btn btn-success" style="flex: 1;">✅ Process Return</button>
+          <button type="button" class="btn btn-secondary" onclick="closeReturnModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Check if user is logged in as librarian
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || user.role !== 'librarian') {
+      window.location.href = 'html.html';
+    }
+    
+    document.getElementById('librarianName').textContent = `Welcome, ${user.fullName}`;
+    
+    let searchType = 'user';
+
+    // Set search type
+    function setSearchType(type) {
+      searchType = type;
+      document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      const input = document.getElementById('searchInput');
+      if (type === 'user') {
+        input.placeholder = 'Search by email or name...';
+      } else {
+        input.placeholder = 'Search by book title or ID...';
+      }
+      document.getElementById('searchResults').innerHTML = '';
+    }
+
+    // Perform search
+    async function performSearch() {
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) return;
+
+      try {
+        const endpoint = searchType === 'user' ? 
+          `http://localhost:3000/librarian/search-user?q=${encodeURIComponent(query)}` :
+          `http://localhost:3000/librarian/search-book?q=${encodeURIComponent(query)}`;
+        
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        
+        if (data.success) {
+          if (searchType === 'user') {
+            displayUserResults(data.users);
+          } else {
+            displayBookResults(data.books);
+          }
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+        document.getElementById('searchResults').innerHTML = '<p class="error-message">Search failed</p>';
+      }
+    }
+
+    // Display user search results
+    function displayUserResults(users) {
+      const container = document.getElementById('searchResults');
+      if (users.length === 0) {
+        container.innerHTML = '<p class="empty-state">No users found</p>';
+        return;
+      }
+
+      container.innerHTML = users.map(u => `
+        <div class="user-card">
+          <h3>${u.FULL_NAME}</h3>
+          <p>📧 ${u.EMAIL}</p>
+          <p>📚 Active Loans: ${u.ACTIVE_LOANS || 0}</p>
+          <p>💰 Total Fines: $${u.TOTAL_FINES || 0}</p>
+          <p>Status: <span class="status-badge ${u.ACTIVE === 'Y' ? 'status-fulfilled' : 'status-overdue'}">${u.ACTIVE === 'Y' ? 'Active' : 'Inactive'}</span></p>
+        </div>
+      `).join('');
+    }
+
+    // Display book search results
+    function displayBookResults(books) {
+      const container = document.getElementById('searchResults');
+      if (books.length === 0) {
+        container.innerHTML = '<p class="empty-state">No books found</p>';
+        return;
+      }
+
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Stock</th>
+              <th>Available</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${books.map(b => `
+              <tr>
+                <td>${b.BOOK_ID}</td>
+                <td><strong>${b.TITLE}</strong></td>
+                <td>${b.STOCK}</td>
+                <td>${b.AVAILABLE}</td>
+                <td>
+                  ${b.AVAILABLE > 0 ? 
+                    '<span class="status-badge status-fulfilled">Available</span>' : 
+                    '<span class="status-badge status-overdue">Out of Stock</span>'}
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    // Load today's stats
+    async function loadStats() {
+      try {
+        const response = await fetch('http://localhost:3000/librarian/stats');
+        const data = await response.json();
+        
+        if (data.success) {
+          document.getElementById('todayLoans').textContent = data.stats.todayLoans;
+          document.getElementById('todayReturns').textContent = data.stats.todayReturns;
+          document.getElementById('activeLoans').textContent = data.stats.activeLoans;
+          document.getElementById('overdueCount').textContent = data.stats.overdueCount;
+          document.getElementById('pendingReservations').textContent = data.stats.pendingReservations;
+        }
+      } catch (error) {
+        console.error('Error loading stats:', error);
+      }
+    }
+
+    // Load active loans
+    async function loadActiveLoans() {
+      try {
+        const response = await fetch('http://localhost:3000/librarian/active-loans');
+        const data = await response.json();
+        
+        if (data.success && data.loans.length > 0) {
+          const tableHtml = `
+            <table>
+              <thead>
+                <tr>
+                  <th>Loan ID</th>
+                  <th>User</th>
+                  <th>Book</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                  <th>Fine</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${data.loans.map(loan => `
+                  <tr>
+                    <td>${loan.LOAN_ID}</td>
+                    <td>${loan.FULL_NAME}<br><small>${loan.EMAIL}</small></td>
+                    <td><strong>${loan.TITLE}</strong></td>
+                    <td>${new Date(loan.DUE_DATE).toLocaleDateString()}</td>
+                    <td><span class="status-badge status-${loan.STATUS}">${loan.STATUS.toUpperCase()}</span></td>
+                    <td>$${loan.FINE_AMOUNT || 0}</td>
+                    <td>
+                      <button class="btn btn-small btn-success" onclick="quickReturn(${loan.LOAN_ID})">✅ Return</button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+          document.getElementById('activeLoansTable').innerHTML = tableHtml;
+        } else {
+          document.getElementById('activeLoansTable').innerHTML = '<p class="empty-state">No active loans</p>';
+        }
+      } catch (error) {
+        console.error('Error loading loans:', error);
+      }
+    }
+
+    // Show reservations
+    async function showReservations() {
+      document.getElementById('reservationsSection').style.display = 'block';
+      
+      try {
+        const response = await fetch('http://localhost:3000/librarian/reservations');
+        const data = await response.json();
+        
+        if (data.success && data.reservations.length > 0) {
+          const tableHtml = `
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>User</th>
+                  <th>Book</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${data.reservations.map(res => `
+                  <tr>
+                    <td>${res.RESERVATION_ID}</td>
+                    <td>${res.FULL_NAME}<br><small>${res.EMAIL}</small></td>
+                    <td><strong>${res.TITLE}</strong></td>
+                    <td>${new Date(res.RESERVATION_DATE).toLocaleDateString()}</td>
+                    <td><span class="status-badge status-${res.STATUS}">${res.STATUS.toUpperCase()}</span></td>
+                    <td>
+                      ${res.STATUS === 'pending' ? `
+                        <button class="btn btn-small btn-success" onclick="fulfillReservation(${res.RESERVATION_ID})">✅ Fulfill</button>
+                        <button class="btn btn-small btn-danger" onclick="cancelReservation(${res.RESERVATION_ID})">✕ Cancel</button>
+                      ` : '-'}
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+          document.getElementById('reservationsTable').innerHTML = tableHtml;
+        } else {
+          document.getElementById('reservationsTable').innerHTML = '<p class="empty-state">No pending reservations</p>';
+        }
+      } catch (error) {
+        console.error('Error loading reservations:', error);
+      }
+    }
+
+    function hideReservations() {
+      document.getElementById('reservationsSection').style.display = 'none';
+    }
+
+    function showOverdue() {
+      // Filter active loans table to show only overdue
+      loadActiveLoans();
+    }
+
+    // Modal functions
+    function openLoanModal() {
+      document.getElementById('loanModal').classList.add('active');
+      document.getElementById('loanForm').reset();
+      document.getElementById('loanMessage').innerHTML = '';
+    }
+
+    function closeLoanModal() {
+      document.getElementById('loanModal').classList.remove('active');
+    }
+
+    function openReturnModal() {
+      document.getElementById('returnModal').classList.add('active');
+      document.getElementById('returnForm').reset();
+      document.getElementById('returnMessage').innerHTML = '';
+    }
+
+    function closeReturnModal() {
+      document.getElementById('returnModal').classList.remove('active');
+    }
+
+    // Process loan
+    document.getElementById('loanForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const loanData = {
+        userEmail: document.getElementById('loanUserEmail').value,
+        bookId: document.getElementById('loanBookId').value,
+        duration: document.getElementById('loanDuration').value
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/librarian/process-loan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(loanData)
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          document.getElementById('loanMessage').innerHTML = '<p class="success-message">✅ Loan processed successfully!</p>';
+          setTimeout(() => {
+            closeLoanModal();
+            loadStats();
+            loadActiveLoans();
+          }, 2000);
+        } else {
+          document.getElementById('loanMessage').innerHTML = `<p class="error-message">❌ ${data.message}</p>`;
+        }
+      } catch (error) {
+        console.error('Error processing loan:', error);
+        document.getElementById('loanMessage').innerHTML = '<p class="error-message">❌ Failed to process loan</p>';
+      }
+    });
+
+    // Process return
+    document.getElementById('returnForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const returnData = {
+        loanId: document.getElementById('returnLoanId').value,
+        fine: document.getElementById('returnFine').value || 0
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/librarian/process-return', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(returnData)
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          document.getElementById('returnMessage').innerHTML = '<p class="success-message">✅ Return processed successfully!</p>';
+          setTimeout(() => {
+            closeReturnModal();
+            loadStats();
+            loadActiveLoans();
+          }, 2000);
+        } else {
+          document.getElementById('returnMessage').innerHTML = `<p class="error-message">❌ ${data.message}</p>`;
+        }
+      } catch (error) {
+        console.error('Error processing return:', error);
+        document.getElementById('returnMessage').innerHTML = '<p class="error-message">❌ Failed to process return</p>';
+      }
+    });
+
+    // Quick return
+    async function quickReturn(loanId) {
+      if (!confirm('Process this return?')) return;
+      
+      try {
+        const response = await fetch('http://localhost:3000/librarian/process-return', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ loanId: loanId, fine: 0 })
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          alert('✅ Return processed!');
+          loadStats();
+          loadActiveLoans();
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Failed to process return');
+      }
+    }
+
+    // Fulfill reservation
+    async function fulfillReservation(reservationId) {
+      try {
+        const response = await fetch(`http://localhost:3000/librarian/reservations/${reservationId}/fulfill`, {
+          method: 'POST'
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          alert('✅ Reservation fulfilled!');
+          showReservations();
+          loadStats();
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Failed to fulfill reservation');
+      }
+    }
+
+    // Cancel reservation
+    async function cancelReservation(reservationId) {
+      if (!confirm('Cancel this reservation?')) return;
+      
+      try {
+        const response = await fetch(`http://localhost:3000/librarian/reservations/${reservationId}/cancel`, {
+          method: 'POST'
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          alert('✅ Reservation cancelled!');
+          showReservations();
+          loadStats();
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Failed to cancel reservation');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('user');
+      window.location.href = 'html.html';
+    }
+
+    // Initialize
+    async function init() {
+      await loadStats();
+      await loadActiveLoans();
+    }
+
+    init();
+  </script>
+</body>
+</html>
